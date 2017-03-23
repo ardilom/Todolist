@@ -27,5 +27,18 @@ class TodoTest (TestCase):
         tasks = Task.objects.all()
         #assert
         self.assertEquals([t1, t2, t3], list(Task.objects.all()))
-        
-     
+    
+    def test_pending_task(self):
+        #arrange
+        t1 = Task.objects.create(name="Task 1")
+        #act
+        #assert
+        self.assertFalse(t1.isFinished()) 
+    
+    def test_done_task(self):
+        #arrange
+        t1 = Task.objects.create(name="Task 1")
+        #act
+        t1.complete()
+        #assert
+        self.assertTrue(t1.isFinished())
