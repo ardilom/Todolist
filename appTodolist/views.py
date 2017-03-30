@@ -18,3 +18,11 @@ def list_tasks(request):
             response.append(t.name)
         response = '-'.join(response)
         return HttpResponse(response, status=200)
+        
+def complete_tasks(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        task = list(Task.objects.filter(name=name))[0]
+        task.complete()
+        task.save()
+        return HttpResponse("", status=200)

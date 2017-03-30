@@ -64,4 +64,15 @@ class TodoTest (TestCase):
         #assert
         self.assertEqual(200,response.status_code)
         #tasks = Task.objects.all()
-        self.assertEquals(response.content, "tarea_1-tarea_2")
+        self.assertEquals("tarea_1-tarea_2", response.content)
+        
+    def test_finish_tasks(self):
+        #arrange
+        client = Client()
+        #act
+        client.post("/task", {"name":"tarea_1"})
+        response = client.post("/complete_task", {"name":"tarea_1"})
+        #assert
+        self.assertEqual(200,response.status_code)
+        task = list(Task.objects.filter(name="tarea_1"))[0]
+        self.assertTrue(task.isFinished())
