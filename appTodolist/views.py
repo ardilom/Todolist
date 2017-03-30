@@ -9,3 +9,12 @@ def add_task(request):
         task = Task(name=name)
         task.save()
         return HttpResponse("", status=200)
+        
+def list_tasks(request):
+    if request.method == "GET":
+        tasks = Task.objects.all()
+        response = []
+        for t in tasks:
+            response.append(t.name)
+        response = '-'.join(response)
+        return HttpResponse(response, status=200)

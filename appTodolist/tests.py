@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from appTodolist.models import *
+import json
 
 # Create your tests here.
 
@@ -52,3 +53,15 @@ class TodoTest (TestCase):
         #assert
         self.assertEqual(200,response.status_code)
         self.assertEqual(1, count)
+        
+    def test_get_list_tasks(self):
+        #arrange
+        client = Client()
+        #act
+        client.post("/task", {"name":"tarea_1"})
+        client.post("/task", {"name":"tarea_2"})
+        response = client.get("/list_task")
+        #assert
+        self.assertEqual(200,response.status_code)
+        #tasks = Task.objects.all()
+        self.assertEquals(response.content, "tarea_1-tarea_2")
