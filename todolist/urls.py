@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from appTodolist import views
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^task', views.add_task),
 ]

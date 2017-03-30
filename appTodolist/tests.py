@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from appTodolist.models import *
 
 # Create your tests here.
@@ -42,3 +42,13 @@ class TodoTest (TestCase):
         t1.complete()
         #assert
         self.assertTrue(t1.isFinished())
+        
+    def test_post_task(self):
+        #arrange
+        client = Client()
+        #act
+        response = client.post("/task", {"name":"tarea_1"})
+        count = Task.objects.all().count()
+        #assert
+        self.assertEqual(200,response.status_code)
+        self.assertEqual(1, count)

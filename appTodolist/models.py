@@ -14,4 +14,4 @@ class Task(models.Model):
         
     def complete(self):
         self.status = True
-    
+        
