@@ -1,0 +1,17 @@
+<form action="/task" method="post">
+    {% csrf_token %}
+    <input type=text name="name"/> 
+    <input type="submit" value="Submit" />
+</form>
+
+{% for task in tasks %}
+    <p>{{task.id}} - {{ task.name }} - {% if task.status %}completed{% else %}incomplete{% endif %}</p>
+    {% if not task.status %}
+    <form action="/complete_task" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{ task.id }}"/> 
+    <input type="submit" value="Completar" />
+    {% endif %}
+</form>
+{% endfor %}
+

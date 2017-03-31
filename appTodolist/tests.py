@@ -51,7 +51,7 @@ class TodoTest (TestCase):
         response = client.post("/task", {"name":"tarea_1"})
         count = Task.objects.all().count()
         #assert
-        self.assertEqual(200,response.status_code)
+        self.assertEqual(302 ,response.status_code)
         self.assertEqual(1, count)
         
     def test_get_list_tasks(self):
@@ -64,15 +64,17 @@ class TodoTest (TestCase):
         #assert
         self.assertEqual(200,response.status_code)
         #tasks = Task.objects.all()
-        self.assertEquals("tarea_1-tarea_2", response.content)
+        self.assertIn('tarea_1',response.content)
+        self.assertIn('tarea_2',response.content)
+        self.assertIn('incomplete',response.content)
         
     def test_finish_tasks(self):
         #arrange
         client = Client()
         #act
         client.post("/task", {"name":"tarea_1"})
-        response = client.post("/complete_task", {"name":"tarea_1"})
+        response = client.post("/complete_task", {"id":1})
         #assert
-        self.assertEqual(200,response.status_code)
-        task = list(Task.objects.filter(name="tarea_1"))[0]
+        self.assertEqual(302,response.status_code)
+        task = Task.objects.get(id=1)
         self.assertTrue(task.isFinished())
