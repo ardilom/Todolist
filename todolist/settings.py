@@ -77,14 +77,7 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 if 'TRAVIS' in os.environ:
     DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.postgresql_psycopg2',
-            'NAME':     'travis_ci_db',
-            'USER':     'postgres',
-            'PASSWORD': '',
-            'HOST':     'localhost',
-            'PORT':     '',
-        }
+        'default': dj_database_url.config(default='postgres://localhost/travis_ci_db')
     }
 else:
     DATABASES = {
