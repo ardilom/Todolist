@@ -16,9 +16,10 @@ def add_task(request):
         try:
             body = json.loads(body)
         except ValueError:
-            return HttpResponseNotFound('<h1>Error</h1>')
-        task = Task.objects.get(id=body.get('id'))
-        task.name = body.get('name')
+            print 
+        put_data = json.loads(request.body.decode('utf-8'))
+        task = Task.objects.get(put_data.get('id'))
+        task.name = put_data.get('name')
         task.save()
         return HttpResponseRedirect('/list_task')
         

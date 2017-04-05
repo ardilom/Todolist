@@ -67,6 +67,8 @@ class TodoTest (TestCase):
         self.assertIn('tarea_1',response.content)
         self.assertIn('tarea_2',response.content)
         self.assertIn('incomplete',response.content)
+        self.assertIn('Editar',response.content)
+        self.assertIn('Completar',response.content)
         
     def test_finish_tasks(self):
         #arrange
@@ -78,3 +80,16 @@ class TodoTest (TestCase):
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
         self.assertTrue(task.isFinished())
+        
+    def test_edit_task(self):
+        # arrange
+        client = Client()
+        task = Task(name='Tarea para que se va a editar')
+        task.save()
+        # act
+        response = client.put("/task", json.dumps({'id': '1' , 'name':'Nuevo nombre del task'}))
+        # assert
+        self.assertEquals(302, response.status_code)
+        task = Task.objects.get(id=1)
+        self.assertEquals("Nuevo nombre del task", task.name)
+""

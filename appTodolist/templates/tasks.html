@@ -11,6 +11,7 @@
     {% csrf_token %}
     <input type="hidden" name="id" value="{{ task.id }}"/> 
     <input type="submit" value="Completar" />
+    <input type="submit" value="Editar" />
     {% endif %}
 </form>
 {% endfor %}
