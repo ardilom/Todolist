@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseNotFound
 from models import Task
 
 import json
@@ -30,8 +31,39 @@ def list_tasks(request):
 def complete_tasks(request):
     if request.method == "POST":
         id = request.POST.get("id")
+        type = request.POST.get("action_type") # elegir que tipo de accion llega del template, edit o complete
+        if type == "Complete":
+            task = Task.objects.get(id=id)
+            task.complete()
+            task.save()
+            return HttpResponseRedirect("/list_task")
+        else:
+            body = request.body.decode('utf-8')
+            try:
+                body = json.loads(body)
+            except ValueError:
+                return HttpResponseNotFound('<h1>Error</h1>')
+            task = Task.objects.get(id=id)
+            task_name = task.name
+            #task.save()
+            return render(request, 'edit.html', {'name': task_name})
+
+def delete_task(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
         task = Task.objects.get(id=id)
-        task.complete()
-        task.save()
-        return HttpResponseRedirect("/list_task")
+        try:
+            task = Task.objects.get(foo='bar')
+        except Task.DoesNotExist:
+            task = None
+            
+        if task != None:
+            task.delete()
+            return HttpResponseRedirect('/list_tasks')
+        
+        else:
+            return HttpResponseNotFound('Error')
+        
+
+
 

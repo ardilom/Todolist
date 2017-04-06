@@ -75,7 +75,7 @@ class TodoTest (TestCase):
         client = Client()
         #act
         client.post("/task", {"name":"tarea_1"})
-        response = client.post("/complete_task", {"id":1})
+        response = client.post("/complete_task", {"id": 1, "action_type": "Complete"})
         #assert
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
@@ -87,9 +87,20 @@ class TodoTest (TestCase):
         task = Task(name='Tarea para que se va a editar')
         task.save()
         # act
-        response = client.put("/task", json.dumps({'id': '1' , 'name':'Nuevo nombre del task'}))
+        response = client.put("/task", json.dumps({'id': 1 , 'name':'Nuevo nombre del task'}))
         # assert
         self.assertEquals(302, response.status_code)
         task = Task.objects.get(id=1)
         self.assertEquals("Nuevo nombre del task", task.name)
-""
+        
+  #  def test_delete_task(self):
+        #arrange
+    #    client = Client()
+     #   task = Task(name='Delete task')
+      #  task.save()
+        #act
+    #    response = client.post("/delete_task", {'id': 1})
+     #   count = Task.objects.all().count()
+        #assert
+      #  self.assertEquals(200, response.status_code)
+      #  self.assertEquals(0, count)
