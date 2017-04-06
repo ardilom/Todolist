@@ -44,9 +44,9 @@ def complete_tasks(request):
             except ValueError:
                 return HttpResponseNotFound('<h1>Error</h1>')
             task = Task.objects.get(id=id)
-            task_name = task.name
-            #task.save()
-            return render(request, 'edit.html', {'name': task_name})
+            task.name = request.POST.get("editText")
+            task.save()
+            return HttpResponseRedirect("/list_task")
 
 def delete_task(request):
     if request.method == "POST":

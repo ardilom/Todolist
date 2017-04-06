@@ -12,6 +12,13 @@
     <input type="hidden" name="id" value="{{ task.id }}"/> 
     <input type="submit" name="action_type" value="Completar" />
     <input type="submit" name="action_type" value="Editar" />
+    
+    
+    <form action="/complete_task" method="post">
+        <input type=text name="editText"/> 
+        <input type="submit" name="action_type" value="Editar" />
+    </form>
+    
     {% endif %}
 </form>
 {% endfor %}
