@@ -18,6 +18,11 @@
         <input type="submit" name="action_type" value="Editar" />
     </form>
     
+    <form action="/delete_task" method="post">
+        <input type="hidden" name="{{task.id}}"/> 
+        <input type="submit" value="Eliminar" />
+    </form>
+    
     {% endif %}
 </form>
 {% endfor %}

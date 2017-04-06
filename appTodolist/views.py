@@ -12,16 +12,6 @@ def add_task(request):
         task = Task(name=name)
         task.save()
         return HttpResponseRedirect('/list_task')
-    elif request.method == "PUT":
-        body = request.body.decode('utf-8')
-        try:
-            body = json.loads(body)
-        except ValueError:
-            return HttpResponseNotFound('<h1>Error</h1>')
-        task = Task.objects.get(id=body.get('id'))
-        task.name = body.get('name')
-        task.save()
-        return HttpResponseRedirect('/list_task')
         
 def list_tasks(request):
     if request.method == "GET":
@@ -46,9 +36,8 @@ def complete_tasks(request):
 def delete_task(request):
     if request.method == "POST":
         id = request.POST.get("id")
-        task = Task.objects.get(id=id)
         try:
-            task = Task.objects.get(foo='bar')
+            task = Task.objects.get(id=id)
         except Task.DoesNotExist:
             task = None
         if task != None:

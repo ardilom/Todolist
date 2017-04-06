@@ -80,27 +80,27 @@ class TodoTest (TestCase):
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
         self.assertTrue(task.isFinished())
-        
+    
     def test_edit_task(self):
-        # arrange
+        #arrange
         client = Client()
-        task = Task(name='Tarea para que se va a editar')
-        task.save()
-        # act
-        response = client.put("/task", json.dumps({'id': 1 , 'name':'Nuevo nombre del task'}))
-        # assert
-        self.assertEquals(302, response.status_code)
+        #act
+        client.post("/task", {"name":"tarea_1"})
+        response = client.post("/complete_task", {'id': 1, 'action_type': "Editar", 'editText': "tarea_editada"})
+        #assert
+        self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
-        self.assertEquals("Nuevo nombre del task", task.name)
+        self.assertEquals("tarea_editada", task.name)
         
-#    def test_delete_task(self):
-#        #arrange
-#        client = Client()
-#        task = Task(name='Delete task')
-#        task.save()
-#        #act
-#        response = client.post("/delete_task", {'id': 1})
-#        count = Task.objects.all().count()
-#        #assert
-#        self.assertEquals(200, response.status_code)
-#        self.assertEquals(0, count)
+        
+    def test_delete_task(self):
+        #arrange
+        client = Client()
+        task = Task(name='Delete task')
+        task.save()
+        #act
+        response = client.post("/delete_task", {'id': 1})
+        count = Task.objects.all().count()
+        #assert
+        self.assertEquals(302, response.status_code)
+        self.assertEquals(0, count)
