@@ -17,13 +17,14 @@
         <input type=text name="editText"/> 
         <input type="submit" name="action_type" value="Editar" />
     </form>
+    {% endif %}
     
     <form action="/delete_task" method="post">
-        <input type="hidden" name="{{task.id}}"/> 
+        {% csrf_token %}
+        <input type="hidden" name="id" value="{{task.id}}"/> 
         <input type="submit" value="Eliminar" />
     </form>
-    
-    {% endif %}
 </form>
+
 {% endfor %}
 

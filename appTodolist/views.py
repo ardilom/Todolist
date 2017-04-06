@@ -36,16 +36,8 @@ def complete_tasks(request):
 def delete_task(request):
     if request.method == "POST":
         id = request.POST.get("id")
-        try:
-            task = Task.objects.get(id=id)
-        except Task.DoesNotExist:
-            task = None
-        if task != None:
-            task.delete()
-            return HttpResponseRedirect('/list_tasks')
-        else:
-            return HttpResponseNotFound('Error')
-        
-
+        task = Task.objects.get(id=id)
+        task.delete()
+        return HttpResponseRedirect('/list_tasks')
 
 
