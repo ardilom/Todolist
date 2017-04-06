@@ -93,14 +93,14 @@ class TodoTest (TestCase):
         task = Task.objects.get(id=1)
         self.assertEquals("Nuevo nombre del task", task.name)
         
-  #  def test_delete_task(self):
-        #arrange
-    #    client = Client()
-     #   task = Task(name='Delete task')
-      #  task.save()
-        #act
-    #    response = client.post("/delete_task", {'id': 1})
-     #   count = Task.objects.all().count()
-        #assert
-      #  self.assertEquals(200, response.status_code)
-      #  self.assertEquals(0, count)
+#    def test_delete_task(self):
+#        #arrange
+#        client = Client()
+#        task = Task(name='Delete task')
+#        task.save()
+#        #act
+#        response = client.post("/delete_task", {'id': 1})
+#        count = Task.objects.all().count()
+#        #assert
+#        self.assertEquals(200, response.status_code)
+#        self.assertEquals(0, count)

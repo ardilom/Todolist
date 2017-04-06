@@ -84,7 +84,7 @@ if 'TRAVIS' in os.environ:
     }
 elif 'on_heroku' in os.environ:
     DATABASES = {
-        'default': {dj_database_url.config()}
+        'default': dj_database_url.config()
     }
 else:
     DATABASES = {
