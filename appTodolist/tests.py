@@ -75,7 +75,7 @@ class TodoTest (TestCase):
         client = Client()
         #act
         client.post("/task", {"name":"tarea_1"})
-        response = client.post("/complete_task", {"id": 1, "action_type": "Complete"})
+        response = client.post("/complete_task", {"id": 1, "action_type": "Completar"})
         #assert
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
