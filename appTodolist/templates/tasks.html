@@ -1,17 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>To Do</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    </head>
+    
+    <style type="text/css">
+        body {
+    	width: 360px;
+    	margin: 100px auto;
+    	background: #f7f7f7;
+        }
+        
+    </style>
+<body>
+    
+<div class="container">
+
 <form action="/task" method="post">
     {% csrf_token %}
-    <input type=text name="name"/> 
+    <input type=text name="name" placeholder="Agregar tarea" /> 
     <input type="submit" value="Submit" />
 </form>
 
 {% for task in tasks %}
+<div class="row">
     <p>{{task.id}} - {{ task.name }} - {% if task.status %}completed{% else %}incomplete{% endif %}</p>
     {% if not task.status %}
     <form action="/complete_task" method="post">
     {% csrf_token %}
     <input type="hidden" name="id" value="{{task.id}}"/> 
     <input type="submit" name="action_type" value="Completar" />
-    
+
     
     <form action="/complete_task" method="post">
         <input type=text name="editText"/> 
@@ -24,7 +44,13 @@
         <input type="hidden" name="id" value="{{task.id}}"/> 
         <input type="submit" value="Eliminar" />
     </form>
-</form>
+<!--</form>-->
+</div>
 
 {% endfor %}
 
+</div>
+
+</body>
+
+</html>
