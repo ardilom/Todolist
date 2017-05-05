@@ -25,6 +25,6 @@ urlpatterns = [
     url(r'^list_task', views.list_tasks),
     url(r'^complete_task', views.complete_tasks),
     url(r'^Tasks', views.list_tasks),
-    url(r'^delete_task', views.delete_task)
-
+    url(r'^delete_task', views.delete_task),
+    url(r'^increase_priority_task', views.increase_priority_task),
 ]
