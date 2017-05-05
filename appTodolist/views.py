@@ -47,4 +47,10 @@ def increase_priority_task(request):
         task = Task.objects.get(id=id)
         task.increasePriority()
         return HttpResponseRedirect('/list_tasks')
-        
+
+def decrease_priority_task(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        task = Task.objects.get(id=id)
+        task.decreasePriority()
+        return HttpResponseRedirect('/list_tasks')

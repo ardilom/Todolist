@@ -15,7 +15,7 @@ class Task(models.Model):
     
     name = models.CharField(max_length=20)
     status = models.BooleanField(default = False)
-    priority = models.IntegerField(default=new_priority, blank=False, null=False, unique=True)
+    priority = models.IntegerField(default=new_priority, blank=False, null=False)
     
     def isFinished(self):
         return self.status
@@ -25,10 +25,16 @@ class Task(models.Model):
         
     def increasePriority(self):
         tasks = Task.objects.filter(priority__lt=self.priority)
-        if tasks.count()>0:
+        if tasks.count() > 0:
             task=tasks.order_by('-priority')[0]
             auxPriority = task.priority
             task.priority = self.priority
             self.priority = auxPriority
             self.save()
             task.save()
+            
+    def decreasePriority(self):
+        tasks = Task.objects.filter(priority__gt=self.priority)
+        if tasks.count() > 0:
+            task=tasks.order_by('priority')[0]
+            task.increasePriority()
