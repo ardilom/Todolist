@@ -104,3 +104,131 @@ class TodoTest (TestCase):
         #assert
         self.assertEquals(302, response.status_code)
         self.assertEquals(0, count)
+        
+        
+    def test_priority_empty(self):
+        #arrange
+        t1 = Task.objects.create(name="Task 1")
+        #act
+        #assert
+        self.assertEquals(1, Task.objects.get(id=1).priority)
+        
+    def test_priority_threeTasks(self):
+        #arrange
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        t3 = Task.objects.create(name="Task 3")
+        #act
+        #assert
+        self.assertEquals(1, Task.objects.get(id=1).priority)
+        self.assertEquals(2, Task.objects.get(id=2).priority)
+        self.assertEquals(3, Task.objects.get(id=3).priority)
+
+    def test_increase_priority(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        t3 = Task.objects.create(name="Task 3")
+        #act
+        response = client.post("/increase_priority_task", {'id': 3})
+        response2 = client.post("/increase_priority_task", {'id': 3})
+        response3 = client.post("/increase_priority_task", {'id': 2})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(1, Task.objects.get(id=3).priority)
+        self.assertEquals(2, Task.objects.get(id=2).priority)
+        self.assertEquals(3, Task.objects.get(id=1).priority)
+        
+    def test_increase_priority_1_task(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        #act
+        response = client.post("/increase_priority_task", {'id': 1})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(1, Task.objects.get(id=1).priority)
+        
+    def test_increase_priority_2_task(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        #act
+        response = client.post("/increase_priority_task", {'id': 2})
+        response2 = client.post("/increase_priority_task", {'id': 1})
+        response3 = client.post("/increase_priority_task", {'id': 1})
+        response4 = client.post("/increase_priority_task", {'id': 2})
+        response5 = client.post("/increase_priority_task", {'id': 2})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(1, Task.objects.get(id=2).priority)
+        self.assertEquals(2, Task.objects.get(id=1).priority)
+        
+    def test_increase_priority_with_deletion(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        t3 = Task.objects.create(name="Task 3")
+        #act
+        response = client.post("/delete_task", {'id': 2})
+        response2 = client.post("/increase_priority_task", {'id': 3})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(2, Task.objects.all().count())
+        self.assertEquals(1, Task.objects.get(id=3).priority)
+        self.assertEquals(3, Task.objects.get(id=1).priority)
+        
+    def test_decrease_priority_2_tasks(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        #act
+        response = client.post("/decrease_priority_task", {'id': 1})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(1, Task.objects.get(id=2).priority)
+        self.assertEquals(2, Task.objects.get(id=1).priority)
+        
+    def test_decrease_priority_1_task(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        #act
+        response = client.post("/decrease_priority_task", {'id': 1})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(1, Task.objects.get(id=1).priority)
+        
+    def test_decrease_priority_with_deletion(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        t3 = Task.objects.create(name="Task 3")
+        #act
+        response = client.post("/delete_task", {'id': 2})
+        response2 = client.post("/decrease_priority_task", {'id': 1})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(2, Task.objects.all().count())
+        self.assertEquals(1, Task.objects.get(id=3).priority)
+        self.assertEquals(3, Task.objects.get(id=1).priority)
+    
+    def test_decrease_and_increase_priority_1(self):
+        #arrange
+        client = Client()
+        t1 = Task.objects.create(name="Task 1")
+        t2 = Task.objects.create(name="Task 2")
+        t3 = Task.objects.create(name="Task 3")
+        #act
+        response = client.post("/decrease_priority_task", {'id': 2})
+        response = client.post("/increase_priority_task", {'id': 3})
+        #assert
+        self.assertEqual(302 ,response.status_code)
+        self.assertEquals(2, Task.objects.get(id=1).priority)
+        self.assertEquals(3, Task.objects.get(id=2).priority)
+        self.assertEquals(1, Task.objects.get(id=3).priority)

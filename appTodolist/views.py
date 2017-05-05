@@ -15,7 +15,7 @@ def add_task(request):
         
 def list_tasks(request):
     if request.method == "GET":
-        tasks = Task.objects.all()
+        tasks = Task.objects.all().order_by('priority')
         return render(request, 'tasks.html', {'tasks': tasks})
         
 def complete_tasks(request):
@@ -41,3 +41,16 @@ def delete_task(request):
         return HttpResponseRedirect('/list_tasks')
 
 
+def increase_priority_task(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        task = Task.objects.get(id=id)
+        task.increasePriority()
+        return HttpResponseRedirect('/list_tasks')
+
+def decrease_priority_task(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        task = Task.objects.get(id=id)
+        task.decreasePriority()
+        return HttpResponseRedirect('/list_tasks')
