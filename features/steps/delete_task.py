@@ -1,6 +1,5 @@
 from behave import given, when, then
 from selenium import webdriver
-from datetime import datetime
 
 @given(u'I go to "/list_tasks" to delete a task')
 def step_impl(context):
@@ -22,7 +21,7 @@ def step_impl(context):
 @then(u'I should no longer be able  to see the task "Buy bread and milk and beer, it\'s friday!!!" on the list')
 def step_impl(context):
     br = context.browser
-    assert "Buy bread and milk and beer, it\'s friday!!!" not in br.page_source
+    assert "Buy bread and migit hf feature finish behavelk and beer, it\'s friday!!!" not in br.page_source
     #deberia ir en enviroment.py, pero nos falla
     context.browser.quit()
 
