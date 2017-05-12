@@ -1,9 +1,9 @@
 from behave import given, when, then
 
-@given(u'I go to "/list_tasks" to delete a task')
+@given(u'I go to "/tasks" to delete a task')
 def step_impl(context):
     br = context.browser
-    br.get(context.base_url + '/list_tasks')
+    br.get(context.base_url + '/tasks')
 
 @when(u'I select the delete button of task "Buy bread and milk and beer, it\'s friday!!!"')
 def step_impl(context):
