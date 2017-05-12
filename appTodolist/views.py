@@ -17,7 +17,33 @@ def list_tasks(request):
     if request.method == "GET":
         tasks = Task.objects.all().order_by('priority')
         return render(request, 'tasks.html', {'tasks': tasks})
+ 
+
+def update_task(request, task_id):
+    if request.method == "POST":
+        action_type = request.POST.get("action_type")
         
+        if action_type == "complete":
+            complete_task(task_id)
+            return HttpResponseRedirect("/list_task")
+
+        elif action_type == "edit":
+            edit_text = request.POST.get("editText")
+            edit_task(task_id, edit_text)
+
+        return HttpResponseRedirect("/list_task")
+
+            
+def complete_task(task_id):
+    task = Task.objects.get(id=task_id)
+    task.complete()
+    task.save()
+    
+def edit_task(task_id, edit_text):
+    task = Task.objects.get(id=task_id)
+    task.name = edit_text
+    task.save()
+    
 def complete_tasks(request):
     if request.method == "POST":
         id = request.POST.get("id")

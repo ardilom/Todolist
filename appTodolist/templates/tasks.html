@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>To Do</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <title>To Do List</title>
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">-->
+    	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script
+          src="https://code.jquery.com/jquery-3.2.1.min.js"</script>
     </head>
     
     <style type="text/css">
@@ -12,8 +15,68 @@
     	background: #f7f7f7;
         }
         
+        li {
+	background: #fff;
+	height: 40px;
+	line-height: 40px;
+	color: #666;
+}
+
+li:nth-child(2n){
+	background: #f7f7f7;
+}
+        
     </style>
+    
+    <script type="text/javascript">
+        
+    </script>
+    
 <body>
+    
+    
+<div id="container">
+    
+    <h1>To-Do List <i class="fa fa-plus"></i></h1>
+    <form action="/task" method="post">
+    {% csrf_token %}
+        <input type=text name="name" id="name" placeholder="Agregar tarea" /> 
+        <button type="submit" name="add_submit" id ="add_submit"> <i class="fa fa-plus"></i> </button>
+    </form>
+    
+    <ul id="task-list">
+    {% for task in tasks %}
+        
+        <li id="task-{{task.id}}">{{task.id}} - {{ task.name }} - {% if task.status %}completed{% else %}incomplete{% endif %}</li>  
+        
+        <!--Complete Form-->
+        {% if not task.status %}
+        <form action="/task/{{task.id}}/" method="post">{% csrf_token %}
+            <button type="submit" id="complete_submit" name="action_type" value="complete" />
+                Completar
+            </button>
+        </form>
+
+    
+        <form action="/task/{{task.id}}/" method="post"> {% csrf_token %}
+            <input type=text name="editText"/> 
+            <button type="submit" id="edit_submit" name="action_type" value="edit" />
+                Editar
+            </button>
+                
+            
+        </form>
+        {% endif %}    
+            
+    {% endfor %}
+        
+    </ul>
+
+</div>
+
+
+
+    
     
 <div class="container">
 
