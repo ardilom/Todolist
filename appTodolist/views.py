@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, get_object_or_404
 from django.http import HttpResponseNotFound
 from models import Task
 
@@ -24,49 +24,27 @@ def index(request):
  
 
 def update_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    
     if request.method == "POST":
         action_type = request.POST.get("action_type")
         
         if action_type == "complete":
-            complete_task(task_id)
+            task.complete()
+            task.save()
 
         elif action_type == "edit":
             edit_text = request.POST.get("editText")
-            edit_task(task_id, edit_text)
+            task.name = edit_text
+            task.save()
         
         elif action_type == "delete":
-            delete_task(task_id) 
+            task.delete()
             
         elif action_type == "increase_priority":
-            increase_priority_task(task_id)
+            task.increasePriority()
             
         elif action_type == "decrease_priority":
-            decrease_priority_task(task_id)
+            task.decreasePriority()
             
     return HttpResponseRedirect("/tasks")
-
-  
-### METHODS ### 
-
-def complete_task(task_id):
-    task = Task.objects.get(id=task_id)
-    task.complete()
-    task.save()
-    
-def edit_task(task_id, edit_text):
-    task = Task.objects.get(id=task_id)
-    task.name = edit_text
-    task.save()
-    
-def delete_task(task_id):
-    task = Task.objects.get(id=task_id)
-    task.delete()
-
-
-def increase_priority_task(task_id):
-    task = Task.objects.get(id=task_id)
-    task.increasePriority()
-    
-def decrease_priority_task(task_id):
-    task = Task.objects.get(id=task_id)
-    task.decreasePriority()

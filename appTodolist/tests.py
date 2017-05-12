@@ -48,7 +48,7 @@ class TodoTest (TestCase):
         #arrange
         client = Client()
         #act
-        response = client.post("/task", {"name":"tarea_1"})
+        response = client.post("/tasks", {"name":"tarea_1"})
         count = Task.objects.all().count()
         #assert
         self.assertEqual(302 ,response.status_code)
@@ -58,15 +58,15 @@ class TodoTest (TestCase):
         #arrange
         client = Client()
         #act
-        client.post("/task", {"name":"tarea_1"})
-        client.post("/task", {"name":"tarea_2"})
-        response = client.get("/list_task")
+        client.post("/tasks", {"name":"tarea_1"})
+        client.post("/tasks", {"name":"tarea_2"})
+        response = client.get("/tasks")
         #assert
         self.assertEqual(200,response.status_code)
         #tasks = Task.objects.all()
         self.assertIn('tarea_1',response.content)
         self.assertIn('tarea_2',response.content)
-        self.assertIn('incomplete',response.content)
+        self.assertIn('completed',response.content)
         self.assertIn('Editar',response.content)
         self.assertIn('Completar',response.content)
         
@@ -74,8 +74,8 @@ class TodoTest (TestCase):
         #arrange
         client = Client()
         #act
-        client.post("/task", {"name":"tarea_1"})
-        response = client.post("/complete_task", {"id": 1, "action_type": "Completar"})
+        client.post("/tasks", {"name":"tarea_1"})
+        response = client.post("/tasks/1/", {"action_type": "complete"})
         #assert
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
@@ -85,8 +85,8 @@ class TodoTest (TestCase):
         #arrange
         client = Client()
         #act
-        client.post("/task", {"name":"tarea_1"})
-        response = client.post("/complete_task", {'id': 1, 'action_type': "Editar", 'editText': "tarea_editada"})
+        client.post("/tasks", {"name":"tarea_1"})
+        response = client.post("/tasks/1/", {'action_type': "edit", 'editText': "tarea_editada"})
         #assert
         self.assertEqual(302,response.status_code)
         task = Task.objects.get(id=1)
@@ -99,7 +99,7 @@ class TodoTest (TestCase):
         task = Task(name='Delete task')
         task.save()
         #act
-        response = client.post("/delete_task", {'id': 1})
+        response = client.post("/tasks/1/", {'action_type': "delete" })
         count = Task.objects.all().count()
         #assert
         self.assertEquals(302, response.status_code)
@@ -131,9 +131,9 @@ class TodoTest (TestCase):
         t2 = Task.objects.create(name="Task 2")
         t3 = Task.objects.create(name="Task 3")
         #act
-        response = client.post("/increase_priority_task", {'id': 3})
-        response2 = client.post("/increase_priority_task", {'id': 3})
-        response3 = client.post("/increase_priority_task", {'id': 2})
+        response = client.post("/tasks/3/", {'action_type': "increase_priority" })
+        response2 = client.post("/tasks/3/", {'action_type': "increase_priority" })
+        response3 = client.post("/tasks/2/", {'action_type': "increase_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(1, Task.objects.get(id=3).priority)
@@ -145,7 +145,7 @@ class TodoTest (TestCase):
         client = Client()
         t1 = Task.objects.create(name="Task 1")
         #act
-        response = client.post("/increase_priority_task", {'id': 1})
+        response = client.post("/tasks/1/", {'action_type': "increase_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(1, Task.objects.get(id=1).priority)
@@ -156,11 +156,11 @@ class TodoTest (TestCase):
         t1 = Task.objects.create(name="Task 1")
         t2 = Task.objects.create(name="Task 2")
         #act
-        response = client.post("/increase_priority_task", {'id': 2})
-        response2 = client.post("/increase_priority_task", {'id': 1})
-        response3 = client.post("/increase_priority_task", {'id': 1})
-        response4 = client.post("/increase_priority_task", {'id': 2})
-        response5 = client.post("/increase_priority_task", {'id': 2})
+        response = client.post("/tasks/2/", {'action_type': "increase_priority" })
+        response2 = client.post("/tasks/1/", {'action_type': "increase_priority" })
+        response3 = client.post("/tasks/1/", {'action_type': "increase_priority" })
+        response4 = client.post("/tasks/2/", {'action_type': "increase_priority" })
+        response5 = client.post("/tasks/2/", {'action_type': "increase_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(1, Task.objects.get(id=2).priority)
@@ -173,8 +173,8 @@ class TodoTest (TestCase):
         t2 = Task.objects.create(name="Task 2")
         t3 = Task.objects.create(name="Task 3")
         #act
-        response = client.post("/delete_task", {'id': 2})
-        response2 = client.post("/increase_priority_task", {'id': 3})
+        response = client.post("/tasks/2/", {'action_type': "delete" })
+        response2 = client.post("/tasks/3/", {'action_type': "increase_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(2, Task.objects.all().count())
@@ -187,7 +187,7 @@ class TodoTest (TestCase):
         t1 = Task.objects.create(name="Task 1")
         t2 = Task.objects.create(name="Task 2")
         #act
-        response = client.post("/decrease_priority_task", {'id': 1})
+        response = client.post("/tasks/1/", {'action_type': "decrease_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(1, Task.objects.get(id=2).priority)
@@ -198,7 +198,7 @@ class TodoTest (TestCase):
         client = Client()
         t1 = Task.objects.create(name="Task 1")
         #act
-        response = client.post("/decrease_priority_task", {'id': 1})
+        response = client.post("/tasks/1/", {'action_type': "decrease_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(1, Task.objects.get(id=1).priority)
@@ -210,8 +210,8 @@ class TodoTest (TestCase):
         t2 = Task.objects.create(name="Task 2")
         t3 = Task.objects.create(name="Task 3")
         #act
-        response = client.post("/delete_task", {'id': 2})
-        response2 = client.post("/decrease_priority_task", {'id': 1})
+        response = client.post("/tasks/2/", {'action_type': "delete" })
+        response2 = client.post("/tasks/1/", {'action_type': "decrease_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(2, Task.objects.all().count())
@@ -225,8 +225,8 @@ class TodoTest (TestCase):
         t2 = Task.objects.create(name="Task 2")
         t3 = Task.objects.create(name="Task 3")
         #act
-        response = client.post("/decrease_priority_task", {'id': 2})
-        response = client.post("/increase_priority_task", {'id': 3})
+        response = client.post("/tasks/2/", {'action_type': "decrease_priority" })
+        response = client.post("/tasks/3/", {'action_type': "increase_priority" })
         #assert
         self.assertEqual(302 ,response.status_code)
         self.assertEquals(2, Task.objects.get(id=1).priority)

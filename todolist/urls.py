@@ -23,8 +23,5 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
     url(r'^tasks$', views.tasks),
-    url(r'^increase_priority_task', views.increase_priority_task),
-    url(r'^decrease_priority_task', views.decrease_priority_task),
-    
     url(r'^tasks/(?P<task_id>\d+)/$', views.update_task)
 ]
