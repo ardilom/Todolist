@@ -8,11 +8,11 @@ def before_all(context):
     context.browser.implicitly_wait(1)
     
     if 'TRAVIS' in os.environ:
-        context.server_url = 'localhost/list_task'
+        context.server_url = 'localhost/tasks'
     elif 'on_heroku' in os.environ:
-        context.server_url = 'https://todolist-ardilla.herokuapp.com/list_task'
+        context.server_url = 'https://todolist-ardilla.herokuapp.com/tasks'
     else:
-        context.server_url = 'https://todolist-ardilom.c9users.io/list_task'
+        context.server_url = 'https://todolist-ardilom.c9users.io/tasks'
 
 def after_all(context):
     # Explicitly quits the browser, otherwise it won't once tests are done
