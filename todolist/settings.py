@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'appTodolist'
+    'appTodolist',
+    'behave_django'
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -1,54 +1,134 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>To Do</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <title>To Do List</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.css"/>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.11.8/semantic.min.js"></script>
+
     </head>
     
     <style type="text/css">
-        body {
-    	width: 360px;
-    	margin: 100px auto;
-    	background: #f7f7f7;
+    
+       body {
+            background: linear-gradient(#7ac3ff 10%, #f6ffb2 90%);
         }
         
+        h1 {
+        	margin: 0;
+        	text-transform: uppercase;
+        	font-size: 36px;
+        	font-weight: normal;
+        	text-align: center;
+        }
+        
+        button {
+            text-align: center;
+        }
+        
+
+       
+       #container {
+            width: 800px;
+        	margin: 100px auto;
+        	background: #f7f7f7;
+        	box-shadow: 0 0 3px rgba(0,0,0, 0.1);
+        }
+        
+        .completed {
+        	color: gray;
+        	text-decoration: line-through;
+        }
+
     </style>
+    
+    <script type="text/javascript">
+        
+    </script>
+    
 <body>
     
-<div class="container">
-
-<form action="/task" method="post">
-    {% csrf_token %}
-    <input type=text name="name" placeholder="Agregar tarea" /> 
-    <input type="submit" value="Submit" />
-</form>
+    
+<div id="container" class="ui centered grid">
+    
+    <div class="row">
+        <div class="column">
+        
+        <h1>To-Do List</h1>
+        
+        <form action="/tasks" class="ui form" method="post">
+        {% csrf_token %}
+        <div class="inline fields">
+            <div class="field">
+                <input type=text name="name" id="name" placeholder="Agregar tarea" />
+            </div>
+            <div class="field">
+                <button type="submit" id ="add_submit" class="ui primary button" name="add_submit"><i class="plus icon"></i></button>
+            </div>
+        </div>
+        </form>
+        </div>
+    </div>
 
 {% for task in tasks %}
-<div class="row">
-    <p>{{task.id}} - {{ task.name }} - {% if task.status %}completed{% else %}incomplete{% endif %}</p>
+<div id="task-{{task.id}}" class="row">  
+    <div class="four wide column">
+        <p {% if task.status %} class="completed" {% endif %}>
+            {{task.id}} - {{ task.name }}
+        </p>
+    </div>
+    
     {% if not task.status %}
-    <form action="/complete_task" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="id" value="{{task.id}}"/> 
-    <input type="submit" name="action_type" value="Completar" />
-
+    <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+            <button type="submit" id="complete_submit" class="ui purple basic button" name="action_type" value="complete" />
+                Completar
+            </button>
+        </form>
+    </div>
     
-    <form action="/complete_task" method="post">
-        <input type=text name="editText"/> 
-        <input type="submit" name="action_type" value="Editar" />
-    </form>
+    <div class="six wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post"> {% csrf_token %}
+        <div class="inline fields">
+            <div class="ten wide field">
+            <input type=text name="editText"/> 
+            </div>
+            <div class="four wide field">
+            <button type="submit" id="edit_submit" class="ui green basic button" name="action_type" value="edit" />
+                Editar
+            </button>
+            </div>
+        </div>
+        </form>
+    </div>
     {% endif %}
+    <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <button type="submit" id="delete_submit" class="ui red basic button" name="action_type" value="delete" />
+            Eliminar
+        </button>
+        </form>
+    </div>
+    <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <button type="submit" id="increase_priority_submit" class="ui green button" name="action_type" value="increase_priority" />
+            <i class="chevron up icon"></i>
+        </button>
+        </form>
+    </div>
+        <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <button type="submit" id="decrease_priority_submit" class="ui orange button" name="action_type" value="decrease_priority" />
+            <i class="chevron down icon"></i>
+        </button>
+        </form>
+    </div>
     
-    <form action="/delete_task" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{task.id}}"/> 
-        <input type="submit" value="Eliminar" />
-    </form>
-<!--</form>-->
+    
 </div>
 
 {% endfor %}
-
+        
 </div>
 
 </body>
