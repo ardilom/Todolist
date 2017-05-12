@@ -11,7 +11,7 @@
     <style type="text/css">
     
        body {
-            background:         linear-gradient(#2BC0E4 10%, #EAECC6 90%);
+            background: linear-gradient(#2BC0E4 10%, #EAECC6 90%);
         }
         
         h1 {
@@ -20,6 +20,10 @@
         	font-size: 36px;
         	font-weight: normal;
         	text-align: center;
+        }
+        
+        button {
+            text-align: center;
         }
         
 
@@ -52,7 +56,7 @@
         
         <h1>To-Do List</h1>
         
-        <form action="/task" class="ui form" method="post">
+        <form action="/tasks" class="ui form" method="post">
         {% csrf_token %}
         <div class="inline fields">
             <div class="field">
@@ -76,7 +80,7 @@
     
     {% if not task.status %}
     <div class="three wide column">
-        <form action="/task/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
             <button type="submit" id="complete_submit" class="ui purple basic button" name="action_type" value="complete" />
                 Completar
             </button>
@@ -84,7 +88,7 @@
     </div>
     
     <div class="six wide column">
-        <form action="/task/{{task.id}}/" class="ui form" method="post"> {% csrf_token %}
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post"> {% csrf_token %}
         <div class="inline fields">
             <div class="ten wide field">
             <input type=text name="editText"/> 
@@ -99,18 +103,32 @@
     </div>
     {% endif %}
     <div class="three wide column">
-        <form action="/task/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
         <button type="submit" id="delete_submit" class="ui red basic button" name="action_type" value="delete" />
             Eliminar
         </button>
         </form>
     </div>
+    <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <button type="submit" id="increase_priority_submit" class="ui green button" name="action_type" value="increase_priority" />
+            <i class="chevron up icon"></i>
+        </button>
+        </form>
+    </div>
+        <div class="three wide column">
+        <form action="/tasks/{{task.id}}/" class="ui form" method="post">{% csrf_token %}
+        <button type="submit" id="decrease_priority_submit" class="ui orange button" name="action_type" value="decrease_priority" />
+            <i class="chevron down icon"></i>
+        </button>
+        </form>
+    </div>
+    
+    
 </div>
 
 {% endfor %}
         
- 
-
 </div>
 
 </body>

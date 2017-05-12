@@ -20,14 +20,11 @@ from appTodolist import views
 
 
 urlpatterns = [
+    url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
-    url(r'^task$', views.add_task),
-    url(r'^list_task', views.list_tasks),
-    url(r'^complete_task', views.complete_tasks),
-    url(r'^Tasks', views.list_tasks),
-    url(r'^delete_task', views.delete_task),
+    url(r'^tasks$', views.tasks),
     url(r'^increase_priority_task', views.increase_priority_task),
     url(r'^decrease_priority_task', views.decrease_priority_task),
     
-    url(r'^task/(?P<task_id>\d+)/$', views.update_task)
+    url(r'^tasks/(?P<task_id>\d+)/$', views.update_task)
 ]
