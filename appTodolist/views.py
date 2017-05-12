@@ -30,6 +30,9 @@ def update_task(request, task_id):
         elif action_type == "edit":
             edit_text = request.POST.get("editText")
             edit_task(task_id, edit_text)
+        
+        elif action_type == "delete":
+            delete(task_id)    
 
         return HttpResponseRedirect("/list_task")
 
@@ -44,6 +47,10 @@ def edit_task(task_id, edit_text):
     task.name = edit_text
     task.save()
     
+def delete(task_id):
+    task = Task.objects.get(id=task_id)
+    task.delete()
+
 def complete_tasks(request):
     if request.method == "POST":
         id = request.POST.get("id")
